@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BOMB-DAY Surprise</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
+      font-family: 'Comic Sans MS', cursive;
+      overflow: hidden;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    #startButton {
+      padding: 20px 40px;
+      font-size: 24px;
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      animation: pulse 1s infinite;
+    }
+
+    h1, p {
+      display: none;
+      font-size: 40px;
+      margin: 20px 0;
+    }
+
+    h1 {
+      font-size: 60px;
+      color: #ff1493;
+    }
+
+    .bomb {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Cartoon_bomb.svg/800px-Cartoon_bomb.svg.png') no-repeat center center;
+      background-size: contain;
+      animation: drop 3s linear forwards;
+    }
+
+    @keyframes drop {
+      0% { top: -50px; }
+      100% { top: 100vh; opacity: 0; }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="startButton">💣 DO NOT PRESS THIS BUTTON 💣</button>
+
+  <h1>💥 BOOOOM 💥</h1>
+  <p>🎉 Happy Birthday Niggesh! 🎉</p>
+  <p>You’ve officially survived another year of chaos. Here's your bomb-day blast! 💣🎂</p>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script>
+    const button = document.getElementById("startButton");
+    const message = document.querySelectorAll("h1, p");
+
+    function dropBombs() {
+      for (let i = 0; i < 20; i++) {
+        let bomb = document.createElement("div");
+        bomb.classList.add("bomb");
+        bomb.style.left = Math.random() * window.innerWidth + "px";
+        bomb.style.animationDuration = (2 + Math.random() * 2) + "s";
+        document.body.appendChild(bomb);
+        
+        setTimeout(() => {
+          bomb.remove();
+        }, 4000);
+      }
+    }
+
+    button.addEventListener("click", () => {
+      // Hide the button
+      button.style.display = "none";
+
+      // Show message
+      message.forEach(el => el.style.display = "block");
+
+      // Start bombs
+      dropBombs();
+      setInterval(dropBombs, 1500);
+
+      // Confetti!
+      const duration = 5 * 1000;
+      const end = Date.now() + duration;
+
+      (function frame() {
+        confetti({
+          particleCount: 7,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+        });
+        confetti({
+          particleCount: 7,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      })();
+    });
+  </script>
+
+</body>
+</html>
