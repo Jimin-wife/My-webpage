@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>💣 BOMB-DAY SURPRISE 💣</title>
+  <title>BOMB-DAY Surprise</title>
   <style>
     body {
       margin: 0;
@@ -14,16 +14,20 @@
       text-align: center;
     }
 
-    h1 {
-      margin-top: 100px;
-      font-size: 3em;
-      color: red;
-      animation: shake 1s infinite;
+    #startButton {
+      margin-top: 200px;
+      padding: 20px 40px;
+      font-size: 24px;
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      animation: pulse 1s infinite;
     }
 
-    p {
-      font-size: 1.5em;
-      color: #0f0;
+    h1, p {
+      display: none;
     }
 
     .bomb {
@@ -40,22 +44,35 @@
       100% { top: 100vh; opacity: 0; }
     }
 
-    @keyframes shake {
-      0% { transform: translateX(-2px); }
-      25% { transform: translateX(2px); }
-      50% { transform: translateX(-2px); }
-      75% { transform: translateX(2px); }
-      100% { transform: translateX(0); }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
 
-  <h1>💣 BOOOOOM 💣</h1>
-  <p>HAPPY BOMB-DAY, YOU CHAOTIC GREMLIN! 🎉</p>
-  <p>Enjoy the explosions... You’ve survived another year 😎🔥</p>
+  <button id="startButton">💣 DO NOT PRESS THIS BUTTON 💣</button>
 
+  <h1>💥 BOOOOM 💥</h1>
+  <p>🎉 Happy Birthday Niggesh! 🎉</p>
+  <p>You’ve officially survived another year of chaos. Here's your bomb-day blast! 💣🎂</p>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <script>
+    const button = document.getElementById("startButton");
+    const message = document.querySelectorAll("h1, p");
+
     function dropBombs() {
       for (let i = 0; i < 20; i++) {
         let bomb = document.createElement("div");
@@ -70,8 +87,40 @@
       }
     }
 
-    setInterval(dropBombs, 1000);
-    dropBombs();
+    button.addEventListener("click", () => {
+      // Hide the button
+      button.style.display = "none";
+
+      // Show message
+      message.forEach(el => el.style.display = "block");
+
+      // Start bombs
+      dropBombs();
+      setInterval(dropBombs, 1500);
+
+      // Confetti!
+      const duration = 5 * 1000;
+      const end = Date.now() + duration;
+
+      (function frame() {
+        confetti({
+          particleCount: 7,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+        });
+        confetti({
+          particleCount: 7,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      })();
+    });
   </script>
 
 </body>
